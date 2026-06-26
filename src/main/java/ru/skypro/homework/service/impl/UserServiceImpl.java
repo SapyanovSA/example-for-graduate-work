@@ -60,10 +60,14 @@ public class UserServiceImpl implements UserService {
     public void updateUserImage(MultipartFile image, String username) {
         User user = userRepository.findByEmail(username)
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
-
-        // Временная заглушка для хранения имени файла картинки
-        user.setImage("/users/image/" + user.getId());
-        userRepository.save(user);
-        log.info("Avatar updated for user: {}", username);
+        try {
+            user.setImageData(image.getBytes());
+            user.setImage("/images/user/" + user.getId()); // Ссылка на эндпоинт ImageController
+            userRepository.save(user);
+            log.info("Avatar successfully uploaded for user: {}", username);
+        } catch (java.io.IOException e) {
+            log.error("Failed to upload avatar", e);
+            throw new RuntimeException("Image upload failed");
+        }
     }
 }

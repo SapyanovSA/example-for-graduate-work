@@ -39,9 +39,18 @@ public class AdServiceImpl implements AdService {
 
         Ad ad = adMapper.toEntity(properties);
         ad.setAuthor(author);
-        ad.setImage("/ads/image/" + ad.getId());
 
+        // Сначала сохраняем, чтобы получить сгенерированный ID
         Ad savedAd = adRepository.save(ad);
+
+        try {
+            savedAd.setImageData(image.getBytes());
+            savedAd.setImage("/images/ad/" + savedAd.getId());
+            adRepository.save(savedAd);
+        } catch (java.io.IOException e) {
+            throw new RuntimeException("Failed to save ad image");
+        }
+
         log.info("Ad created with id: {} by user: {}", savedAd.getId(), username);
         return adMapper.toAdDto(savedAd);
     }
@@ -79,13 +88,20 @@ public class AdServiceImpl implements AdService {
         return adMapper.toAds(ads);
     }
 
+
+
     @Override
     public void updateAdImage(Integer id, MultipartFile image) {
         Ad ad = adRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Ad not found"));
-        ad.setImage("/ads/image/" + id);
-        adRepository.save(ad);
-        log.info("Image updated for ad id: {}", id);
+        try {
+            ad.setImageData(image.getBytes());
+            ad.setImage("/images/ad/" + id);
+            adRepository.save(ad);
+            log.info("Image updated for ad id: {}", id);
+        } catch (java.io.IOException e) {
+            throw new RuntimeException("Failed to update ad image");
+        }
     }
 
     @Transactional(readOnly = true)

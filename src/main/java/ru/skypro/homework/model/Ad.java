@@ -19,4 +19,8 @@ public class Ad {
     private Integer price;
     private String title;
     private String description;
+
+    @Lob
+    @org.hibernate.annotations.Type(type = "org.hibernate.type.BinaryType")
+    private byte[] imageData;
 }

@@ -22,4 +22,8 @@ public class User {
     private Role role;
 
     private String image;
+
+    @Lob
+    @org.hibernate.annotations.Type(type = "org.hibernate.type.BinaryType")
+    private byte[] imageData;
 }
