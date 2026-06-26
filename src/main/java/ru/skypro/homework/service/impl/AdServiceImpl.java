@@ -15,6 +15,11 @@ import ru.skypro.homework.repository.UserRepository;
 import ru.skypro.homework.service.AdService;
 import java.util.List;
 
+/**
+ * Реализация сервиса для управления объявлениями {@link ru.skypro.homework.service.AdService}.
+ * Содержит бизнес-логику взаимодействия с репозиториями объявлений и пользователей,
+ * а также логику сохранения бинарных данных изображений в базу данных PostgreSQL.
+ */
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -25,6 +30,7 @@ public class AdServiceImpl implements AdService {
     private final UserRepository userRepository;
     private final AdMapper adMapper;
 
+    /** {@inheritDoc} */
     @Override
     @Transactional(readOnly = true)
     public Ads getAllAds() {
@@ -32,6 +38,7 @@ public class AdServiceImpl implements AdService {
         return adMapper.toAds(ads);
     }
 
+    /** {@inheritDoc} */
     @Override
     public AdDto addAd(CreateOrUpdateAd properties, MultipartFile image, String username) {
         User author = userRepository.findByEmail(username)
@@ -55,6 +62,7 @@ public class AdServiceImpl implements AdService {
         return adMapper.toAdDto(savedAd);
     }
 
+    /** {@inheritDoc} */
     @Override
     @Transactional(readOnly = true)
     public ExtendedAd getAd(Integer id) {
@@ -63,12 +71,14 @@ public class AdServiceImpl implements AdService {
         return adMapper.toExtendedAd(ad);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void removeAd(Integer id) {
         adRepository.deleteById(id);
         log.info("Ad deleted with id: {}", id);
     }
 
+    /** {@inheritDoc} */
     @Override
     public AdDto updateAd(Integer id, CreateOrUpdateAd properties) {
         Ad ad = adRepository.findById(id)
@@ -79,6 +89,7 @@ public class AdServiceImpl implements AdService {
         return adMapper.toAdDto(savedAd);
     }
 
+    /** {@inheritDoc} */
     @Override
     @Transactional(readOnly = true)
     public Ads getAdsMe(String username) {
@@ -89,7 +100,7 @@ public class AdServiceImpl implements AdService {
     }
 
 
-
+    /** {@inheritDoc} */
     @Override
     public void updateAdImage(Integer id, MultipartFile image) {
         Ad ad = adRepository.findById(id)
@@ -104,6 +115,16 @@ public class AdServiceImpl implements AdService {
         }
     }
 
+    /**
+     * Проверяет, является ли текущий авторизованный пользователь автором объявления
+     * или он обладает правами администратора (ROLE_ADMIN).
+     * <p>
+     * Данный метод используется в аннотациях {@code @PreAuthorize} контроллера
+     * для динамической проверки прав доступа перед вызовом методов модификации данных.
+     *
+     * @param adId уникальный идентификатор проверяемого объявления
+     * @return {@code true}, если доступ разрешен (пользователь — автор или админ), иначе {@code false}
+     */
     @Transactional(readOnly = true)
     public boolean isAuthorOrAdmin(Integer adId) {
         String currentUsername = SecurityContextHolder.getContext().getAuthentication().getName();

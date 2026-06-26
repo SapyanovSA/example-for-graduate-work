@@ -3,6 +3,10 @@ package ru.skypro.homework.dto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
+/**
+ * Модель данных для выгрузки полной информации о профиле авторизованного пользователя.
+ * Используется для отображения личного кабинета на клиентской стороне.
+ */
 @Data
 @Schema(description = "Полная информация о пользователе")
 public class UserDto {

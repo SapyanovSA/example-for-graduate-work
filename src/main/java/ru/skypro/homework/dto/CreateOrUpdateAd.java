@@ -6,6 +6,10 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.Size;
 
+/**
+ * Входящие данные для создания нового или редактирования существующего объявления.
+ * Содержит аннотации валидации текстовых полей и ценового диапазона.
+ */
 @Data
 @Schema(description = "Данные для создания или обновления объявления")
 public class CreateOrUpdateAd {

@@ -15,6 +15,10 @@ import ru.skypro.homework.dto.*;
 import ru.skypro.homework.service.AdService;
 import ru.skypro.homework.service.CommentService;
 
+/**
+ * REST-контроллер для обработки запросов, связанных с объявлениями и комментариями.
+ * Обеспечивает публикацию товаров, загрузку изображений, вывод списков и управление отзывами.
+ */
 @Slf4j
 @CrossOrigin(value = "http://localhost:3000")
 @RestController

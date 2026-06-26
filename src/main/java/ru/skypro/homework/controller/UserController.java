@@ -16,6 +16,10 @@ import ru.skypro.homework.dto.UpdateUser;
 import ru.skypro.homework.dto.UserDto;
 import ru.skypro.homework.service.UserService;
 
+/**
+ * REST-контроллер для управления защищенными данными профиля пользователя.
+ * Обрабатывает запросы на получение анкеты, обновление контактов, смену аватара и пароля.
+ */
 @Slf4j
 @CrossOrigin(value = "http://localhost:3000")
 @RestController

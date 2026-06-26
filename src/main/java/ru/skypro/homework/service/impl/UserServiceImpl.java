@@ -13,6 +13,11 @@ import ru.skypro.homework.model.User;
 import ru.skypro.homework.repository.UserRepository;
 import ru.skypro.homework.service.UserService;
 
+/**
+ * Реализация сервиса управления пользователями {@link ru.skypro.homework.service.UserService}.
+ * Отвечает за извлечение профиля текущего пользователя, обновление его контактных данных,
+ * загрузку аватарки в формате byte[] и безопасное изменение паролей через шифрование.
+ */
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -22,6 +27,7 @@ public class UserServiceImpl implements UserService {
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
 
+    /** {@inheritDoc} */
     @Override
     public void setPassword(NewPassword newPassword, String username) {
         User user = userRepository.findByEmail(username)
@@ -38,6 +44,7 @@ public class UserServiceImpl implements UserService {
         log.info("Password updated for user: {}", username);
     }
 
+    /** {@inheritDoc} */
     @Override
     public UserDto getUser(String username) {
         User user = userRepository.findByEmail(username)
@@ -45,6 +52,7 @@ public class UserServiceImpl implements UserService {
         return userMapper.toDto(user);
     }
 
+    /** {@inheritDoc} */
     @Override
     public UpdateUser updateUser(UpdateUser updateUser, String username) {
         User user = userRepository.findByEmail(username)
@@ -56,6 +64,7 @@ public class UserServiceImpl implements UserService {
         return updateUser;
     }
 
+    /** {@inheritDoc} */
     @Override
     public void updateUserImage(MultipartFile image, String username) {
         User user = userRepository.findByEmail(username)

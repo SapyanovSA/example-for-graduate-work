@@ -4,6 +4,9 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import javax.validation.constraints.Size;
 
+/**
+ * Данные формы авторизации пользователя при входе в систему.
+ */
 @Data
 @Schema(description = "Форма авторизации пользователя")
 public class Login {

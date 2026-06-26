@@ -7,23 +7,48 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+/**
+ * Глобальный обработчик исключений для всего приложения.
+ * <p>
+ * Перехватывает критические ошибки безопасности, валидации и бизнес-логики,
+ * возникающие на уровне сервисов или контроллеров, и конвертирует их
+ * в понятные фронтенду HTTP-статусы без вывода системного трассировочного стека (stack trace).
+ */
 @RestControllerAdvice
 public class ExceptionHandlerController {
 
-    // Если неверный старый пароль при смене пароля, то возвращается 400 Bad Request
+    /**
+     * Обрабатывает ошибки неверных учетных данных.
+     * Возникает, если пользователь ввел неправильный текущий пароль при попытке его смены.
+     *
+     * @param e исключение {@link BadCredentialsException}
+     * @return HTTP-статус {@code 400 Bad Request}
+     */
     @ExceptionHandler(BadCredentialsException.class)
     public ResponseEntity<Void> handleBadCredentials(BadCredentialsException e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }
 
-    // Если обычный юзер лезет в чужое объявление, то @PreAuthorize выбросит AccessDeniedException.
-    // Возвращаем 403 Forbidden
+    /**
+     * Обрабатывает ошибки нарушения прав доступа.
+     * Возникает автоматически, когда SpEL-выражения в аннотациях {@code @PreAuthorize}
+     * (методы проверки авторства {@code isAuthorOrAdmin}) возвращают {@code false}.
+     *
+     * @param e исключение {@link AccessDeniedException}
+     * @return HTTP-статус {@code 403 Forbidden}
+     */
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<Void> handleAccessDenied(AccessDeniedException e) {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
     }
 
-    // Обработка остальных непредвиденных ситуаций
+    /**
+     * Обрабатывает некорректные аргументы, переданные в методы бизнес-логики.
+     * Возникает, если в базе данных не найдены запрашиваемые сущности (пользователи, объявления, комментарии).
+     *
+     * @param e исключение {@link IllegalArgumentException}
+     * @return HTTP-статус {@code 400 Bad Request} с текстовым описанием ошибки в теле ответа
+     */
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<String> handleIllegalArgument(IllegalArgumentException e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());

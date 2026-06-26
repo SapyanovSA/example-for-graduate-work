@@ -16,6 +16,11 @@ import ru.skypro.homework.repository.UserRepository;
 import ru.skypro.homework.service.CommentService;
 import java.util.List;
 
+/**
+ * Реализация сервиса для работы с комментариями {@link ru.skypro.homework.service.CommentService}.
+ * Обеспечивает логику привязки комментариев к объявлениям, фиксацию времени создания в миллисекундах
+ * и проверку прав доступа перед удалением или редактированием текста.
+ */
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -27,6 +32,7 @@ public class CommentServiceImpl implements CommentService {
     private final UserRepository userRepository;
     private final CommentMapper commentMapper;
 
+    /** {@inheritDoc} */
     @Override
     @Transactional(readOnly = true)
     public Comments getComments(Integer adId) {
@@ -38,6 +44,7 @@ public class CommentServiceImpl implements CommentService {
         return commentsDto;
     }
 
+    /** {@inheritDoc} */
     @Override
     public CommentDto addComment(Integer adId, CreateOrUpdateComment properties, String username) {
         User author = userRepository.findByEmail(username)
@@ -55,12 +62,14 @@ public class CommentServiceImpl implements CommentService {
         return commentMapper.toCommentDto(savedComment);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void deleteComment(Integer adId, Integer commentId) {
         commentRepository.deleteById(commentId);
         log.info("Comment deleted with id: {}", commentId);
     }
 
+    /** {@inheritDoc} */
     @Override
     public CommentDto updateComment(Integer adId, Integer commentId, CreateOrUpdateComment properties) {
         Comment comment = commentRepository.findById(commentId)
@@ -71,6 +80,16 @@ public class CommentServiceImpl implements CommentService {
         return commentMapper.toCommentDto(savedComment);
     }
 
+    /**
+     * Проверяет, является ли текущий авторизованный пользователь автором комментария
+     * или он обладает правами администратора (ROLE_ADMIN).
+     * <p>
+     * Данный метод используется инфраструктурой Spring Security через SpEL-выражения
+     * в аннотациях {@code @PreAuthorize} на уровне контроллера.
+     *
+     * @param commentId уникальный идентификатор проверяемого комментария
+     * @return {@code true}, если текущий пользователь имеет право изменить/удалить комментарий
+     */
     @Transactional(readOnly = true)
     public boolean isAuthorOrAdmin(Integer commentId) {
         String currentUsername = SecurityContextHolder.getContext().getAuthentication().getName();

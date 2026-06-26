@@ -9,6 +9,11 @@ import ru.skypro.homework.repository.UserRepository;
 import ru.skypro.homework.service.AuthService;
 import java.util.Optional;
 
+/**
+ * Реализация сервиса аутентификации и регистрации {@link ru.skypro.homework.service.AuthService}.
+ * Интегрирует проверку паролей через BCrypt и регистрирует новых пользователей
+ * с автоматическим хешированием секретных данных перед записью в базу данных PostgreSQL.
+ */
 @Service
 @RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
@@ -16,6 +21,11 @@ public class AuthServiceImpl implements AuthService {
     private final UserRepository userRepository;
     private final PasswordEncoder encoder;
 
+    /**
+     * {@inheritDoc}
+     * <p>
+     * Выполняет поиск пользователя по email и сравнивает хэш пароля.
+     */
     @Override
     public boolean login(String userName, String password) {
         Optional<User> userOpt = userRepository.findByEmail(userName);
@@ -25,6 +35,11 @@ public class AuthServiceImpl implements AuthService {
         return encoder.matches(password, userOpt.get().getPassword());
     }
 
+    /**
+     * {@inheritDoc}
+     * <p>
+     * Проверяет уникальность логина, хэширует пароль и сохраняет новую сущность.
+     */
     @Override
     public boolean register(Register register) {
         if (userRepository.findByEmail(register.getUsername()).isPresent()) {

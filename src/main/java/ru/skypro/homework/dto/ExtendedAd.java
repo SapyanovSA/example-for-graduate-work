@@ -3,6 +3,10 @@ package ru.skypro.homework.dto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
+/**
+ * Расширенная модель данных объявления, запрашиваемая клиентом.
+ * Соединяет параметры публикации с развернутыми контактными данными продавца для карточки товара.
+ */
 @Data
 @Schema(description = "Расширенная информация об объявлении")
 public class ExtendedAd {

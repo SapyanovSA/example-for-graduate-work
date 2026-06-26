@@ -5,6 +5,10 @@ import lombok.Data;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
+/**
+ * Форма с полным набором регистрационных данных для создания нового аккаунта.
+ * Содержит правила валидации имени, пароля и регулярное выражение для телефона.
+ */
 @Data
 @Schema(description = "Форма регистрации пользователя")
 public class Register {

@@ -3,6 +3,10 @@ package ru.skypro.homework.dto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
+/**
+ * Данные для передачи детальной информации о комментарии.
+ * Включает текстовое содержание, временную метку публикации и расширенные данные профиля автора.
+ */
 @Data
 @Schema(description = "Информация о комментарии")
 public class CommentDto {

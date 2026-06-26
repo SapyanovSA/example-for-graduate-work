@@ -5,6 +5,10 @@ import lombok.Data;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+/**
+ * Входящие данные для публикации или редактирования текста комментария.
+ * Накладывает ограничения на минимальную и максимальную длину вводимого отзыва.
+ */
 @Data
 @Schema(description = "Данные для создания или обновления комментария")
 public class CreateOrUpdateComment {

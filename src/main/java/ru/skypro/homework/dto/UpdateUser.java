@@ -7,6 +7,10 @@ import javax.validation.constraints.Size;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
+/**
+ * Форма частичного обновления анкетных и контактных данных пользователя.
+ * Позволяет изменить имя, фамилию или телефон без изменения параметров безопасности.
+ */
 @Data
 @Schema(description = "Данные для обновления профиля")
 public class UpdateUser {
