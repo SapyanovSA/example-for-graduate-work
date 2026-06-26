@@ -5,6 +5,7 @@ import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.ReportingPolicy;
 import ru.skypro.homework.dto.AdDto;
+import ru.skypro.homework.dto.Ads;
 import ru.skypro.homework.dto.CreateOrUpdateAd;
 import ru.skypro.homework.dto.ExtendedAd;
 import ru.skypro.homework.model.Ad;
@@ -27,5 +28,13 @@ public interface AdMapper {
 
     void updateAdFromDto(CreateOrUpdateAd dto, @MappingTarget Ad ad);
 
+    // Добавил сигнатуру для маппинга коллекции
     List<AdDto> toAdDtoList(List<Ad> ads);
+
+    default Ads toAds(List<Ad> ads) {
+        Ads adsDto = new Ads();
+        adsDto.setCount(ads.size());
+        adsDto.setResults(toAdDtoList(ads));
+        return adsDto;
+    }
 }

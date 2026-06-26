@@ -27,28 +27,15 @@ public class WebSecurityConfig {
     };
 
     @Bean
-    public InMemoryUserDetailsManager userDetailsService(PasswordEncoder passwordEncoder) {
-        UserDetails user =
-                User.builder()
-                        .username("user@gmail.com")
-                        .password("password")
-                        .passwordEncoder(passwordEncoder::encode)
-                        .roles(Role.USER.name())
-                        .build();
-        return new InMemoryUserDetailsManager(user);
-    }
-
-    @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf()
                 .disable()
                 .authorizeHttpRequests(
                         authorization ->
                                 authorization
-                                        .mvcMatchers(AUTH_WHITELIST)
-                                        .permitAll()
-                                        .mvcMatchers("/ads/**", "/users/**")
-                                        .authenticated())
+                                        .mvcMatchers(AUTH_WHITELIST).permitAll()
+                                        .mvcMatchers(org.springframework.http.HttpMethod.GET, "/ads").permitAll() // РАЗРЕШЕНО ДЛЯ ВСЕХ БЕЗ ТОКЕНА
+                                        .mvcMatchers("/ads/**", "/users/**").authenticated())
                 .cors()
                 .and()
                 .httpBasic(withDefaults());
